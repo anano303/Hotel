@@ -1,101 +1,167 @@
 <body>
-    
-
-
-<header>
+  <header>
     <div class="logo">
-        <h1>Hotel Booking</h1>
+      <h1>Hotel Booking</h1>
     </div>
     <div class="burger-menu" (click)="toggleMenu()">
-    <span></span>
-    <span></span>
-    <span></span>
-  </div>
-    <nav  [class.active]="isMenuOpen">
-        <ul>
-            <li><a routerLink="/home" (click)="closeMenu()">Home</a></li>
-            <li><a routerLink="/hotels" (click)="closeMenu()">Hotels</a></li>
-            <li><a routerLink="/rooms" (click)="closeMenu()">Rooms</a></li>
-            <li><a routerLink="/booked-rooms" (click)="closeMenu()"> Booked Rooms</a></li>
-        </ul>
+      <span></span>
+      <span></span>
+      <span></span>
+    </div>
+    <nav [class.active]="isMenuOpen">
+      <ul>
+        <li><a routerLink="/home" (click)="closeMenu()">Home</a></li>
+        <li><a routerLink="/hotels" (click)="closeMenu()">Hotels</a></li>
+        <li><a routerLink="/rooms" (click)="closeMenu()">Rooms</a></li>
+        <li>
+          <a routerLink="/booked-rooms" (click)="closeMenu()"> Booked Rooms</a>
+        </li>
+      </ul>
     </nav>
-</header>
-<section class="booked-rooms">
+  </header>
+  <section class="booked-rooms">
     <div class="container">
       <h1>My Booked Rooms</h1>
       <p>View all your bookings and manage your reservations with ease</p>
-  
-      
-  
-     
-      <table class="booked-rooms-table">
+
+      <!-- User filter panel -->
+      <div class="filter-panel">
+        <div class="user-filter-form" *ngIf="!userInfo || noUserInfo">
+          <h3>Find Your Bookings</h3>
+          <p>Enter the same name and phone you used when booking</p>
+
+          <div class="form-group">
+            <label>Your Name:</label>
+            <input
+              type="text"
+              [(ngModel)]="userName"
+              placeholder="Enter your full name"
+              required
+            />
+          </div>
+
+          <div class="form-group">
+            <label>Your Phone:</label>
+            <input
+              type="tel"
+              [(ngModel)]="userPhone"
+              placeholder="Enter your phone number"
+              required
+            />
+          </div>
+
+          <button class="apply-filter-btn" (click)="saveUserInfo()">
+            Find My Bookings
+          </button>
+        </div>
+
+        <div class="user-info-panel" *ngIf="userInfo && !noUserInfo">
+          <p>
+            <strong>Showing bookings for:</strong> {{ userInfo.name }} ({{
+              userInfo.phone
+            }})
+          </p>
+          <button class="clear-filter-btn" (click)="clearUserFilter()">
+            Clear Filter
+          </button>
+        </div>
+
+        <div class="view-toggle">
+          <label class="toggle-switch">
+            <input
+              type="checkbox"
+              [(ngModel)]="showAllBookings"
+              (change)="loadBookings()"
+            />
+            <span class="toggle-slider"></span>
+          </label>
+          <span>
+            {{
+              showAllBookings
+                ? "Showing all bookings (demo)"
+                : "Showing my bookings only"
+            }}
+          </span>
+        </div>
+      </div>
+
+      <div *ngIf="loading" class="loading-indicator">
+        <div class="spinner"></div>
+        <p>Loading bookings...</p>
+      </div>
+
+      <div *ngIf="error && !loading" class="error-message">
+        <p>{{ error }}</p>
+        <div *ngIf="error === 'You have no bookings yet.'">
+          <a routerLink="/rooms" class="book-now-button">Book a room now</a>
+        </div>
+      </div>
+
+      <div class="notification-area">
+        <div class="success-notification" *ngIf="cancelSuccess">
+          Booking cancelled successfully!
+        </div>
+        <div class="error-notification" *ngIf="cancelError">
+          {{ cancelError }}
+        </div>
+      </div>
+
+      <table class="booked-rooms-table" *ngIf="bookings.length > 0 && !loading">
         <thead>
-            <tr>
-                <th>Hotel</th>
-                <th>Room</th>
-                <th>User</th>
-                <th>Status</th>
-                <th>Check-in</th>
-                <th>Check-out</th>
-                <th>Total Price</th>
-                <th>Actions</th>
-            </tr>
+          <tr>
+            <th>Booking ID</th>
+            <th>Room ID</th>
+            <th>Customer</th>
+            <th>Check-in</th>
+            <th>Check-out</th>
+            <th>Total Price</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
         </thead>
         <tbody>
-            <tr>
-                <td>
-                    <img src="" alt="Hotel Image">
-                    <span> </span>
-                    <span class="city"></span>
-                </td>
-                <td>
-                    <img src="" alt="Room Image">
-                    <span></span>
-                    <span class="price"></span>
-                </td>
-                <td>
-                    <span></span>
-                    <span class="phone"></span>
-                </td>
-                <td class="status"></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td><button class="cancel-booking">Cancel</button></td>
-            </tr>
-            <tr>
-                <td>
-                    <img src="" alt="Hotel Image">
-                    <span> </span>
-                    <span class="city"></span>
-                </td>
-                <td>
-                    <img src="" alt="Room Image">
-                    <span></span>
-                    <span class="price"></span>
-                </td>
-                <td>
-                    <span></span>
-                    <span class="phone"></span>
-                </td>
-                <td class="status"></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td><button class="cancel-booking">Cancel</button></td>
-            </tr>
+          <tr
+            *ngFor="let booking of bookings"
+            [class.user-booking]="isUserBooking(booking)"
+          >
+            <td>{{ booking.id }}</td>
+            <td>{{ booking.roomID }}</td>
+            <td>
+              {{ booking.customerName }} <br />
+              <small>{{ booking.customerPhone }}</small>
+            </td>
+            <td>{{ booking.checkInDate | date }}</td>
+            <td>{{ booking.checkOutDate | date }}</td>
+            <td>${{ booking.totalPrice }}</td>
+            <td>{{ booking.isConfirmed ? "Confirmed" : "Pending" }}</td>
+            <td>
+              <button
+                class="cancel-booking"
+                [class.disabled]="!isUserBooking(booking) && !showAllBookings"
+                [disabled]="cancellingBookingId === booking.id"
+                (click)="cancelBooking(booking.id, isUserBooking(booking))"
+              >
+                <span *ngIf="cancellingBookingId !== booking.id">
+                  {{
+                    isUserBooking(booking) || showAllBookings
+                      ? "Cancel"
+                      : "Not Yours"
+                  }}
+                </span>
+                <span
+                  *ngIf="cancellingBookingId === booking.id"
+                  class="spinner-small"
+                ></span>
+              </button>
+            </td>
+          </tr>
         </tbody>
-    </table>
+      </table>
     </div>
-    
-
   </section>
   <footer>
     <div class="container">
-        <p>&copy; 2025 Hotel Booking. All rights reserved.</p>
+      <p>&copy; 2025 Hotel Booking. All rights reserved.</p>
     </div>
   </footer>
 </body>
-  
-  
-  

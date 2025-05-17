@@ -1,3 +1,4 @@
+<<<<<<< Updated upstream
  <header>
     <div class="logo">
         <h1>Hotel Booking</h1>
@@ -57,3 +58,193 @@
     <button type="submit" [disabled]="!bookingForm.valid">Book Now</button>
   </form>
 </div>
+=======
+<body>
+  <header>
+    <div class="logo">
+      <h1>Hotel Booking</h1>
+    </div>
+    <div class="burger-menu" (click)="toggleMenu()">
+      <span></span>
+      <span></span>
+      <span></span>
+    </div>
+    <nav [class.active]="isMenuOpen">
+      <ul>
+        <li><a routerLink="/home" (click)="closeMenu()">Home</a></li>
+        <li><a routerLink="/hotels" (click)="closeMenu()">Hotels</a></li>
+        <li><a routerLink="/rooms" (click)="closeMenu()">Rooms</a></li>
+        <li>
+          <a routerLink="/booked-rooms" (click)="closeMenu()"> Booked Rooms</a>
+        </li>
+      </ul>
+    </nav>
+  </header>
+
+  <section class="booking-container">
+    <div *ngIf="loading" class="loading">
+      <div class="spinner"></div>
+      <p>Loading room details...</p>
+    </div>
+
+    <div *ngIf="error" class="error-message">
+      <p>{{ error }}</p>
+      <ng-container
+        *ngIf="
+          error === 'The room is already booked for some of the selected dates.'
+        "
+      >
+        <div class="booking-advice">
+          <p>Please select different dates for your stay.</p>
+          <div class="unavailable-dates" *ngIf="unavailableDates.length > 0">
+            <p><strong>Unavailable dates:</strong></p>
+            <ul>
+              <li *ngFor="let date of unavailableDates.slice(0, 5)">
+                {{ date | date }}
+              </li>
+              <li *ngIf="unavailableDates.length > 5">
+                ...and {{ unavailableDates.length - 5 }} more
+              </li>
+            </ul>
+          </div>
+        </div>
+      </ng-container>
+      <div class="action-buttons">
+        <button
+          (click)="retryLoading()"
+          class="retry-button"
+          *ngIf="!dateConflict"
+        >
+          Try Again
+        </button>
+        <button routerLink="/rooms" class="back-button">Back to Rooms</button>
+      </div>
+    </div>
+
+    <div *ngIf="room && !loading" class="booking-content">
+      <div class="room-details">
+        <h2>Book {{ room.name }}</h2>
+        <div class="room-image" *ngIf="room.images && room.images.length > 0">
+          <img [src]="room.images[0].source" alt="{{ room.name }}" />
+        </div>
+        <div class="room-info">
+          <p><strong>Price per night:</strong> ${{ room.pricePerNight }}</p>
+          <p><strong>Maximum Guests:</strong> {{ room.maximumGuests }}</p>
+
+          <div class="availability-info">
+            <h3>Room Availability</h3>
+            <p>
+              This room has {{ room.bookedDates.length || 0 }} booked dates.
+            </p>
+            <p
+              class="availability-status"
+              [ngClass]="{
+                available: !dateConflict,
+                unavailable: dateConflict
+              }"
+            >
+              <span *ngIf="!dateConflict">Available for selected dates</span>
+              <span *ngIf="dateConflict">Unavailable for selected dates</span>
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <form (ngSubmit)="submitBooking()" class="booking-form">
+        <div class="form-group">
+          <label for="customerName">Full Name:</label>
+          <input
+            type="text"
+            id="customerName"
+            [(ngModel)]="customerName"
+            name="customerName"
+            required
+            placeholder="Enter your full name"
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="customerPhone">Phone Number:</label>
+          <input
+            type="tel"
+            id="customerPhone"
+            [(ngModel)]="customerPhone"
+            name="customerPhone"
+            required
+            placeholder="Enter your phone number"
+          />
+        </div>
+
+        <div
+          class="form-group date-group"
+          [ngClass]="{ 'has-error': dateConflict }"
+        >
+          <label for="checkInDate">Check-in Date:</label>
+          <input
+            type="date"
+            id="checkInDate"
+            [(ngModel)]="checkInDate"
+            name="checkInDate"
+            required
+            (change)="onDateChange()"
+          />
+        </div>
+
+        <div
+          class="form-group date-group"
+          [ngClass]="{ 'has-error': dateConflict }"
+        >
+          <label for="checkOutDate">Check-out Date:</label>
+          <input
+            type="date"
+            id="checkOutDate"
+            [(ngModel)]="checkOutDate"
+            name="checkOutDate"
+            required
+            (change)="onDateChange()"
+          />
+        </div>
+
+        <div class="booking-summary" *ngIf="checkInDate && checkOutDate">
+          <p><strong>Total Nights:</strong> {{ totalNights }}</p>
+          <p><strong>Total Price:</strong> ${{ totalPrice }}</p>
+        </div>
+
+        <div
+          class="form-validation-indicator"
+          [ngClass]="{ valid: isFormValid(), invalid: !isFormValid() }"
+        >
+          <div *ngIf="isFormValid()">
+            <p>
+              ✅ All information is complete and the room is available for your
+              selected dates.
+            </p>
+          </div>
+          <div *ngIf="!isFormValid()">
+            <p>⚠️ Please complete all required fields:</p>
+            <ul class="validation-list">
+              <li *ngIf="!customerName">Enter your full name</li>
+              <li *ngIf="!customerPhone">Enter your phone number</li>
+              <li *ngIf="!checkInDate">Select a check-in date</li>
+              <li *ngIf="!checkOutDate">Select a check-out date</li>
+              <li *ngIf="dateConflict">
+                Select different dates (current selection is unavailable)
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <button type="submit" class="book-button" [disabled]="!isFormValid()">
+          {{ submitting ? "Processing..." : "Complete Booking" }}
+        </button>
+      </form>
+    </div>
+  </section>
+
+  <footer>
+    <div class="container">
+      <p>&copy; 2025 Hotel Booking. All rights reserved.</p>
+    </div>
+  </footer>
+</body>
+>>>>>>> Stashed changes

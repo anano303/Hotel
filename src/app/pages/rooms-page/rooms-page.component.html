@@ -1,79 +1,113 @@
 <body>
-  
-
-<header>
+  <header>
     <div class="logo">
-        <h1>Hotel Booking</h1>
+      <h1>Hotel Booking</h1>
     </div>
     <div class="burger-menu" (click)="toggleMenu()">
-    <span></span>
-    <span></span>
-    <span></span>
-  </div>
-    <nav  [class.active]="isMenuOpen">
-        <ul>
-            <li><a routerLink="/home" (click)="closeMenu()">Home</a></li>
-            <li><a routerLink="/hotels" (click)="closeMenu()">Hotels</a></li>
-            <li><a routerLink="/rooms" (click)="closeMenu()">Rooms</a></li>
-            <li><a routerLink="/booked-rooms" (click)="closeMenu()"> Booked Rooms</a></li>
-        </ul>
+      <span></span>
+      <span></span>
+      <span></span>
+    </div>
+    <nav [class.active]="isMenuOpen">
+      <ul>
+        <li><a routerLink="/home" (click)="closeMenu()">Home</a></li>
+        <li><a routerLink="/hotels" (click)="closeMenu()">Hotels</a></li>
+        <li><a routerLink="/rooms" (click)="closeMenu()">Rooms</a></li>
+        <li>
+          <a routerLink="/booked-rooms" (click)="closeMenu()"> Booked Rooms</a>
+        </li>
+      </ul>
     </nav>
-</header>
-<section class="rooms">
+  </header>
+  <section class="rooms">
     <div class="container">
       <h1>Choose Your Perfect Room</h1>
-      <p>Explore all available rooms, filter by your preferences, and book your stay</p>
-  
-      
+      <p>
+        Explore all available rooms, filter by your preferences, and book your
+        stay
+      </p>
+
       <div class="filters">
         <div class="filter-group">
           <label for="room-type">Room Type:</label>
-          <select id="room-type" [(ngModel)]="selectedRoomType" (change)="onRoomTypeChange()">
-  <option value="">All Types</option>
-  <option *ngFor="let room of roomTypes" [value]="room.id">{{room.name}}</option>
-</select>
+          <select
+            id="room-type"
+            [(ngModel)]="selectedRoomType"
+            (change)="onRoomTypeChange()"
+          >
+            <option value="">All Types</option>
+            <option *ngFor="let room of roomTypes" [value]="room.id">
+              {{ room.name }}
+            </option>
+          </select>
         </div>
-  
+
         <div class="filter-group">
           <label for="price-range">Price Range:</label>
-          <input type="range" id="price-range" [(ngModel)]="priceRange" min="0" max="1000" value="500" (input)="onPriceChange()">
-          <span id="priceValue" >{{priceRange}}</span>
+          <input
+            type="range"
+            id="price-range"
+            [(ngModel)]="priceRange"
+            min="0"
+            max="1000"
+            value="500"
+            (input)="onPriceChange()"
+          />
+          <span id="priceValue">{{ priceRange }}</span>
         </div>
-  
+
         <div class="filter-group">
           <label for="check-in">Check-In:</label>
-          <input id="check-in" type="date" [(ngModel)]="checkInDate" (change)="onDateChange()" />
+          <input
+            id="check-in"
+            type="date"
+            [(ngModel)]="checkInDate"
+            (change)="onDateChange()"
+          />
         </div>
-      
+
         <div class="filter-group">
           <label for="check-out">Check-Out:</label>
-          <input id="check-out" type="date" [(ngModel)]="checkOutDate" (change)="onDateChange()" />
+          <input
+            id="check-out"
+            type="date"
+            [(ngModel)]="checkOutDate"
+            (change)="onDateChange()"
+          />
         </div>
-  
+
         <div class="filter-group">
-          <button class="reset-filters" (click)="resetFilters()">Reset Filters</button>
+          <button class="reset-filters" (click)="resetFilters()">
+            Reset Filters
+          </button>
         </div>
       </div>
-  
-     
-      <div class="room-cards">
-       <div class="room-card" *ngFor="let room of availableRooms">
-  <img [src]="room.images[0]?.source" alt="Room Image" />
-  <h3>{{ room.name }}</h3>
-  <p class="price">${{ room.pricePerNight }}/night</p>
-  <button>View Details</button>
-</div>
 
+      <div class="room-cards">
+        <div class="room-card" *ngFor="let room of availableRooms">
+          <img [src]="room.images[0]?.source" alt="Room Image" />
+          <h3>{{ room.name }}</h3>
+          <p class="price">${{ room.pricePerNight }}/night</p>
+          <div class="room-buttons">
+            <a [routerLink]="['/booking', room.id]" class="book-now-btn"
+              >Book Now</a
+            >
+          </div>
+        </div>
+      </div>
+
+      <div class="booking-notification success" *ngIf="bookingSuccess">
+        Room booked successfully!
+      </div>
+
+      <div class="booking-notification error" *ngIf="bookingError">
+        {{ bookingError }}
       </div>
     </div>
-    
   </section>
   <footer>
     <div class="container-footer">
-        <p>&copy; 2025 Hotel Booking. All rights reserved.</p>
+      <p>&copy; 2025 Hotel Booking. All rights reserved.</p>
     </div>
   </footer>
 </body>
-  
-
-  
