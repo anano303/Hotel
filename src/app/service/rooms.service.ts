@@ -19,14 +19,7 @@ export class RoomsService {
   private baseUrl = 'https://hotelbooking.stepprojects.ge/api/Rooms';
   private roomsCache: Rooms[] | null = null;
 
-<<<<<<< Updated upstream
-  constructor(private http: HttpClient) { }
-getRoomById(id: string): Observable<Rooms> {
-  return this.http.get<Rooms>(`${this.apiUrl}/${id}`);
-}
-=======
   constructor(private http: HttpClient) {}
->>>>>>> Stashed changes
 
   getRoomById(id: number): Observable<Rooms> {
     console.log(`Fetching room with ID: ${id}`);
@@ -69,10 +62,6 @@ getRoomById(id: string): Observable<Rooms> {
       })
     );
   }
-
-
-
-
 
   getRooms(): Observable<Rooms[]> {
     return this.http.get<Rooms[]>(this.apiUrl).pipe(

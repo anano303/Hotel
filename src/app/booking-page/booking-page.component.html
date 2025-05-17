@@ -1,64 +1,3 @@
-<<<<<<< Updated upstream
- <header>
-    <div class="logo">
-        <h1>Hotel Booking</h1>
-    </div>
-    <div class="burger-menu" (click)="toggleMenu()">
-    <span></span>
-    <span></span>
-    <span></span>
-  </div>
-    <nav  [class.active]="isMenuOpen">
-        <ul>
-            <li><a routerLink="/home" (click)="closeMenu()">Home</a></li>
-            <li><a routerLink="/hotels" (click)="closeMenu()">Hotels</a></li>
-            <li><a routerLink="/rooms" (click)="closeMenu()">Rooms</a></li>
-            <li><a routerLink="/booked-rooms" (click)="closeMenu()"> Booked Rooms</a></li>
-        </ul>
-    </nav>
-</header>
-
-
-<div class="booking-page">
-  <h2>Book Your Stay</h2>
-  <div *ngIf="room">
-    <div class="room-images">
-      <img
-  *ngFor="let image of room.images; else noImage"
-  [src]="image.source"
-  [alt]="room.name"
-/>
-<ng-template #noImage>
-  <img src="assets/placeholder.jpg" alt="No Image Available" />
-</ng-template>
-
-    </div>
-    <h3>{{ room.name }}</h3>
-    <p>Price per Night: {{ room.pricePerNight }}</p>
-    <p>Maximum Guests: {{ room.maximumGuests }}</p>
-  </div>
-
-  <form [formGroup]="bookingForm" (ngSubmit)="submitBooking()">
-    <div class="form-group">
-      <label for="name">Name:</label>
-      <input id="name" formControlName="name" placeholder="Your Name" />
-    </div>
-    <div class="form-group">
-      <label for="checkInDate">Check-In Date:</label>
-      <input id="checkInDate" type="date" formControlName="checkInDate" />
-    </div>
-    <div class="form-group">
-      <label for="checkOutDate">Check-Out Date:</label>
-      <input id="checkOutDate" type="date" formControlName="checkOutDate" />
-    </div>
-    <div class="form-group">
-      <label for="guests">Number of Guests:</label>
-      <input id="guests" type="number" formControlName="guests" />
-    </div>
-    <button type="submit" [disabled]="!bookingForm.valid">Book Now</button>
-  </form>
-</div>
-=======
 <body>
   <header>
     <div class="logo">
@@ -247,4 +186,3 @@
     </div>
   </footer>
 </body>
->>>>>>> Stashed changes

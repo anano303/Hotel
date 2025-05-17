@@ -10,14 +10,6 @@ export class BookingService {
   private apiUrl = 'https://hotelbooking.stepprojects.ge/api/Booking';
   private userInfoKey = 'hotel_booking_user_info';
 
-<<<<<<< Updated upstream
- private bookingApiUrl = 'https://hotelbooking.stepprojects.ge/api/Booking';
-
-  constructor(private http: HttpClient) {}
-
-  bookRoom(bookingData: any) {
-    return this.http.post(this.bookingApiUrl, bookingData);
-=======
   constructor(private http: HttpClient) {}
 
   getBookings(): Observable<Booking[]> {
@@ -123,6 +115,5 @@ export class BookingService {
   // Clear user info from local storage
   clearUserInfo(): void {
     localStorage.removeItem(this.userInfoKey);
->>>>>>> Stashed changes
   }
 }

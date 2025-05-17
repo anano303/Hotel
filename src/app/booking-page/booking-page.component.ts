@@ -1,10 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-<<<<<<< Updated upstream
-import { ActivatedRoute, RouterLink } from '@angular/router';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { RoomsService } from '../service/rooms.service';
-import { BookingService } from '../service/booking.service';
-=======
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { RoomsService } from '../service/rooms.service';
 import { SelectedRoomsService } from '../service/selected-rooms.service';
@@ -46,7 +40,6 @@ export class BookingPageComponent implements OnInit {
 
   // Array of unavailable dates
   unavailableDates: string[] = [];
->>>>>>> Stashed changes
 
   constructor(
     private route: ActivatedRoute,
@@ -183,39 +176,9 @@ export class BookingPageComponent implements OnInit {
       !this.dateConflict &&
       !this.submitting &&
       !this.error
->>>>>>> Stashed changes
     );
   }
-  console.log('Room details:', this.room);
 
-<<<<<<< Updated upstream
-}
-
-  submitBooking(): void {
-    if (this.bookingForm.valid) {
-      const bookingData = {
-        ...this.bookingForm.value,
-        roomId: this.room.id,
-      };
-      this.bookingService.bookRoom(bookingData).subscribe(
-        (response) => {
-          console.log('Booking successful:', response);
-          alert('Booking confirmed!');
-        },
-        (error) => console.error('Error during booking:', error)
-      );
-    }
-  }
-  isMenuOpen = false;
-
-  toggleMenu(): void {
-    this.isMenuOpen = !this.isMenuOpen;
-  }
-
-  closeMenu(): void {
-    this.isMenuOpen = false;
-  }
-=======
   /**
    * Check if the currently selected dates are available
    */
@@ -398,5 +361,4 @@ export class BookingPageComponent implements OnInit {
   onDateChange(): void {
     this.calculateTotalPrice();
   }
->>>>>>> Stashed changes
 }
